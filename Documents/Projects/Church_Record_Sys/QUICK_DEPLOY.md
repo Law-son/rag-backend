@@ -16,11 +16,11 @@
    MONGODB_URI=your_mongodb_connection_string
    JWT_SECRET=your_secure_secret_key
    JWT_EXPIRES_IN=7d
-   FRONTEND_URL=https://your-vercel-app.vercel.app
+   FRONTEND_URL=https://allnations.vercel.app
    ARKESEL_API_KEY=your_arkesel_key
    ```
 
-3. **Copy Render URL** (e.g., `https://church-management-api.onrender.com`)
+3. **Production Server URL:** `https://allnations.onrender.com`
 
 ### Client (Vercel) - Deploy Second
 
@@ -31,7 +31,7 @@
 
 2. **Set Environment Variable in Vercel:**
    ```
-   VITE_API_BASE_URL=https://your-render-app.onrender.com/api
+   VITE_API_BASE_URL=https://allnations.onrender.com/api
    ```
    ⚠️ **Important:** Include `/api` at the end!
 
@@ -41,8 +41,8 @@
 
 ## ✅ Verification
 
-1. Test server: `https://your-render-app.onrender.com/health`
-2. Test client: Visit Vercel URL and try logging in
+1. Test server: `https://allnations.onrender.com/health`
+2. Test client: Visit https://allnations.vercel.app and try logging in
 3. Check browser console for any errors
 
 ## 📝 Notes

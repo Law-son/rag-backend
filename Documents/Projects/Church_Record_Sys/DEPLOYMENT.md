@@ -39,20 +39,20 @@ PORT=5000
 MONGODB_URI=your_mongodb_connection_string
 JWT_SECRET=your_secure_jwt_secret_key
 JWT_EXPIRES_IN=7d
-FRONTEND_URL=https://your-vercel-app.vercel.app
+FRONTEND_URL=https://allnations.vercel.app
 ARKESEL_API_KEY=your_arkesel_api_key
 ```
 
 **Important Notes:**
 - Replace `your_mongodb_connection_string` with your MongoDB Atlas connection string
 - Generate a strong `JWT_SECRET` (use a random string generator)
-- Set `FRONTEND_URL` to your Vercel deployment URL (you'll update this after deploying the client)
+- Set `FRONTEND_URL` to `https://allnations.vercel.app` (production client URL)
 - Add your Arkesel SMS API key
 
 ### Step 3: Get Server URL
 
-After deployment, Render will provide a URL like:
-`https://church-management-api.onrender.com`
+After deployment, Render will provide a URL. For this project:
+**Production Server URL:** `https://allnations.onrender.com`
 
 Copy this URL - you'll need it for the client configuration.
 
@@ -75,11 +75,11 @@ Copy this URL - you'll need it for the client configuration.
 Add the following environment variable in Vercel:
 
 ```env
-VITE_API_BASE_URL=https://your-render-app.onrender.com/api
+VITE_API_BASE_URL=https://allnations.onrender.com/api
 ```
 
 **Important:**
-- Replace `your-render-app.onrender.com` with your actual Render service URL
+- Production server URL: `https://allnations.onrender.com`
 - The `/api` suffix is important - don't forget it!
 
 ### Step 3: Deploy
@@ -88,16 +88,16 @@ Click "Deploy" and wait for the build to complete.
 
 ### Step 4: Update Server CORS
 
-After getting your Vercel URL, update the `FRONTEND_URL` environment variable in Render to include your Vercel URL:
+Update the `FRONTEND_URL` environment variable in Render with the production client URL:
 
 ```env
-FRONTEND_URL=https://your-vercel-app.vercel.app
+FRONTEND_URL=https://allnations.vercel.app
 ```
 
 If you need to support multiple URLs (e.g., preview deployments), you can use comma-separated values:
 
 ```env
-FRONTEND_URL=https://your-app.vercel.app,https://your-app-git-main.vercel.app
+FRONTEND_URL=https://allnations.vercel.app,https://allnations-git-main.vercel.app
 ```
 
 ## Pre-Deployment Notes
@@ -109,7 +109,7 @@ The application is configured to use `/favicon.ico`. Add your favicon file to `c
 
 - [ ] Server is running and accessible at Render URL
 - [ ] Client is deployed and accessible at Vercel URL
-- [ ] Health check endpoint works: `https://your-render-app.onrender.com/health`
+- [ ] Health check endpoint works: `https://allnations.onrender.com/health`
 - [ ] Client can connect to server API
 - [ ] Login functionality works
 - [ ] CORS is properly configured
@@ -122,18 +122,18 @@ The application is configured to use `/favicon.ico`. Add your favicon file to `c
 
 1. **Test Server Health:**
    ```bash
-   curl https://your-render-app.onrender.com/health
+   curl https://allnations.onrender.com/health
    ```
 
 2. **Test API Endpoint:**
    ```bash
-   curl https://your-render-app.onrender.com/api/auth/login \
+   curl https://allnations.onrender.com/api/auth/login \
      -H "Content-Type: application/json" \
      -d '{"email":"admin@example.com","password":"yourpassword"}'
    ```
 
 3. **Test Client:**
-   - Visit your Vercel URL
+   - Visit https://allnations.vercel.app
    - Try logging in with admin credentials
    - Test various features
 
@@ -178,7 +178,7 @@ If the client can't connect to the API:
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `VITE_API_BASE_URL` | Backend API URL | `https://api.onrender.com/api` |
+| `VITE_API_BASE_URL` | Backend API URL | `https://allnations.onrender.com/api` |
 
 ### Server (.env in Render)
 
@@ -189,7 +189,7 @@ If the client can't connect to the API:
 | `MONGODB_URI` | MongoDB connection string | `mongodb+srv://...` |
 | `JWT_SECRET` | JWT signing secret | `your-secret-key` |
 | `JWT_EXPIRES_IN` | JWT expiration | `7d` |
-| `FRONTEND_URL` | Client URL for CORS | `https://app.vercel.app` |
+| `FRONTEND_URL` | Client URL for CORS | `https://allnations.vercel.app` |
 | `ARKESEL_API_KEY` | Arkesel SMS API key | `your-api-key` |
 
 ## Continuous Deployment

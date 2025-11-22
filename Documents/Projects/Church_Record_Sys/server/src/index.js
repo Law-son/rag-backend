@@ -33,6 +33,8 @@ connectDB().then(async () => {
 app.use(helmet());
 
 // CORS configuration - support multiple origins for development and production
+// Production: https://allnations.vercel.app
+// Development: http://localhost:5173
 const allowedOrigins = process.env.FRONTEND_URL 
   ? process.env.FRONTEND_URL.split(',').map(url => url.trim())
   : ['http://localhost:5173'];
