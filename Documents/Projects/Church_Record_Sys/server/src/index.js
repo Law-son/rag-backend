@@ -29,9 +29,6 @@ connectDB().then(async () => {
   await seedAdminUser();
 });
 
-// Security middleware
-app.use(helmet());
-
 // CORS configuration - support multiple origins for development and production
 // Production: https://allnations.vercel.app
 // Development: http://localhost:5173
@@ -49,7 +46,8 @@ if (process.env.NODE_ENV === 'development') {
 // Log allowed origins for debugging
 logger.info('CORS allowed origins:', allowedOrigins);
 
-app.use(cors({
+// CORS configuration object
+const corsOptions = {
   origin: (origin, callback) => {
     // Allow requests with no origin (like mobile apps or curl requests) only in development
     if (!origin) {
@@ -65,14 +63,30 @@ app.use(cors({
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  exposedHeaders: ['Content-Length', 'Content-Type'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+};
+
+// CORS must be configured before other middleware
+app.use(cors(corsOptions));
+
+// Handle preflight OPTIONS requests explicitly for all routes
+app.options('*', cors(corsOptions));
+
+// Security middleware (configured to not interfere with CORS)
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  crossOriginEmbedderPolicy: false
 }));
 
-// Rate limiting
+// Rate limiting (skip for OPTIONS preflight requests)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
-  message: 'Too many requests from this IP, please try again later.'
+  message: 'Too many requests from this IP, please try again later.',
+  skip: (req) => req.method === 'OPTIONS' // Skip rate limiting for preflight requests
 });
 app.use('/api/', limiter);
 
