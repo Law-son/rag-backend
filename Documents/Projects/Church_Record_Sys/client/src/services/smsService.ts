@@ -56,7 +56,17 @@ export const smsService = {
   createProgressStream(sessionId: string): EventSource {
     // Production API: https://allnations.onrender.com/api
     // Development API: http://localhost:5000/api
-    const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+    let baseUrl = import.meta.env.VITE_API_BASE_URL;
+    
+    if (!baseUrl) {
+      // If running on production domain, use production API
+      if (typeof window !== 'undefined' && window.location.hostname === 'allnations.vercel.app') {
+        baseUrl = 'https://allnations.onrender.com/api';
+      } else {
+        baseUrl = 'http://localhost:5000/api';
+      }
+    }
+    
     return new EventSource(`${baseUrl}/sms/progress/${sessionId}/stream`);
   },
 };
