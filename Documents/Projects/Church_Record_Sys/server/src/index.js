@@ -29,51 +29,17 @@ connectDB().then(async () => {
   await seedAdminUser();
 });
 
-// CORS configuration - support multiple origins for development and production
-// Production: https://allnations.vercel.app
-// Development: http://localhost:5173
-const allowedOrigins = process.env.FRONTEND_URL 
-  ? process.env.FRONTEND_URL.split(',').map(url => url.trim())
-  : process.env.NODE_ENV === 'production'
-    ? ['https://allnations.vercel.app'] // Default production URL
-    : ['http://localhost:5173']; // Default development URL
-
-// Add localhost origins for development
-if (process.env.NODE_ENV === 'development') {
-  allowedOrigins.push('http://localhost:5173', 'http://127.0.0.1:5173');
-}
-
-// Log allowed origins for debugging
-logger.info('CORS allowed origins:', allowedOrigins);
-
-// CORS configuration object
-const corsOptions = {
-  origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl requests) only in development
-    if (!origin) {
-      return callback(null, process.env.NODE_ENV === 'development');
-    }
-    
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      logger.warn(`CORS blocked origin: ${origin}. Allowed origins: ${allowedOrigins.join(', ')}`);
-      callback(new Error(`Not allowed by CORS. Origin: ${origin}`));
-    }
-  },
+// Simple CORS configuration
+app.use(cors({
+  origin: [
+    'https://allnations.vercel.app',
+    'http://localhost:5173',
+    'http://127.0.0.1:5173'
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
-  exposedHeaders: ['Content-Length', 'Content-Type'],
-  preflightContinue: false,
-  optionsSuccessStatus: 204
-};
-
-// CORS must be configured before other middleware
-app.use(cors(corsOptions));
-
-// Handle preflight OPTIONS requests explicitly for all routes
-app.options('*', cors(corsOptions));
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // Security middleware (configured to not interfere with CORS)
 app.use(helmet({
