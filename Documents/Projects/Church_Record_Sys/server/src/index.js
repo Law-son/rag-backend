@@ -37,12 +37,17 @@ app.use(helmet());
 // Development: http://localhost:5173
 const allowedOrigins = process.env.FRONTEND_URL 
   ? process.env.FRONTEND_URL.split(',').map(url => url.trim())
-  : ['http://localhost:5173'];
+  : process.env.NODE_ENV === 'production'
+    ? ['https://allnations.vercel.app'] // Default production URL
+    : ['http://localhost:5173']; // Default development URL
 
 // Add localhost origins for development
 if (process.env.NODE_ENV === 'development') {
   allowedOrigins.push('http://localhost:5173', 'http://127.0.0.1:5173');
 }
+
+// Log allowed origins for debugging
+logger.info('CORS allowed origins:', allowedOrigins);
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -54,10 +59,13 @@ app.use(cors({
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
+      logger.warn(`CORS blocked origin: ${origin}. Allowed origins: ${allowedOrigins.join(', ')}`);
       callback(new Error(`Not allowed by CORS. Origin: ${origin}`));
     }
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
 // Rate limiting
