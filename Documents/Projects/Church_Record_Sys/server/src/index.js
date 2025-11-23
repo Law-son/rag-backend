@@ -24,12 +24,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Connect to database
-connectDB().then(async () => {
-  await seedAdminUser();
-});
-
-// Simple CORS configuration
+// CORS must be FIRST - before any other middleware
 app.use(cors({
   origin: [
     'https://allnations.vercel.app',
@@ -40,6 +35,11 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+// Connect to database
+connectDB().then(async () => {
+  await seedAdminUser();
+});
 
 // Security middleware (configured to not interfere with CORS)
 app.use(helmet({
